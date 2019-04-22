@@ -1,11 +1,12 @@
 var canvas = document.querySelector('canvas');
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+canvas.height = window.innerHeight-50;
+canvas.width = window.innerWidth-50;
 
 var c = canvas.getContext('2d');
 
 var feedButton = document.getElementById("feedButton");
+var collectButton = document.getElementById("feedButton");
 
 
 
@@ -13,25 +14,52 @@ var feedButton = document.getElementById("feedButton");
 
 //var playereName = prompt("Whats your name", "Enter name here");
 
-var petType = prompt("which pet you want?", "cat/dog");
+// var petType = prompt("which pet you want?", "cat/dog");
+var petType = "dog";
 
 //var petType = "cat.png";
+
+//Stats to be retrived from the data base.
 var maxHealth = 260;
-var maxHunger = 100;
-var maxThirst = 100;
+var maxHunger = 260;
+var maxThirst = 260;
+var coins = 5;
 var dead = false;
 
-// window.addEventListener('mousemove', 
-// function(event) {
-//   mouse.x = event.x;
-//   mouse.y = event.y;
-//   //console.log(mouse.x);
-// })
+//
+
+function mouse()
+{
+  var x;
+  var y;
+}
+
+function aCoin()
+{
+  this.x;
+  this.y;
+  this.vy;
+
+  var coinPic = new Image();
+  coinPic.src = "images/coin.jpg";
+
+  this.animate = function()
+  {
+    
+  }
+}
+
+window.addEventListener('mousemove', 
+function(event) {
+  mouse.x = event.x;
+  mouse.y = event.y;
+  //console.log(mouse.x);
+})
 
 function Dead()
 {
   dead = true;
-  console.log("DEYAAD");
+  //console.log("DEYAAD");
 }
 
 
@@ -52,12 +80,21 @@ function draw_everthing_else()
     healthBar.src = "images/healthBar.jpg";
     c.drawImage(healthBar,20,30,340,85);
   }
+
+  this.coinsUpdate = function()
+  {
+    c.beginPath();
+    c.fillStyle = "white";
+    c.fillRect(20,133,340,84);
+    // c.font = "5px Arial";
+    c.fillText("$",25,166);
+  }
 }
 
 function pet(petType,x,y,health){
     this.x = x;
     this.y = y;
-    this.xv = 1;
+    this.xv = 5;
     this.health  = health;
     this.healthV = 0.08;
     var petImage = new Image();
@@ -69,6 +106,7 @@ function pet(petType,x,y,health){
       {
         console.log("been fed");
         this.health += 10;
+        coins--;
       }
       else
       {
@@ -77,7 +115,7 @@ function pet(petType,x,y,health){
 
     }
 
-    this.statUpdate = function()
+    this.healthUpdate = function()
     {
       if (this.health > 10)
       {
@@ -92,6 +130,7 @@ function pet(petType,x,y,health){
       c.fillRect(93,53,this.health,40);
       c.stroke();
     }
+
     
 
   this.draw = function(){
@@ -102,11 +141,14 @@ function pet(petType,x,y,health){
 
 
   this.update = function(){
-    if (this.x == canvas.width-250 || this.x == 0)
+    if (this.x > mouse.x-125)
     {
-      this.xv = -this.xv;
+      this.x -= this.xv;
     }
-    this.x += this.xv;
+    if (this.x < mouse.x-125)
+    {
+      this.x += this.xv;
+    }
     //this.y++;
     if (dead)
     {
@@ -122,17 +164,30 @@ petObject = new pet(petType,(canvas.width/2),(canvas.height)-250,maxHealth)
 everythingElse = new draw_everthing_else();
 
 feedButton.addEventListener("click", feed);
+collectButton.addEventListener("click", collect);
 function feed()
 {
   petObject.feed();
+}
+function collect()
+{
+  function getRandomInt(max) 
+  {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+  for (i = 0; i < nCoins; i++)
+  {
+    getRandomInt()
+  }
 }
 
 function animate(){
   requestAnimationFrame(animate)
   c.clearRect(0,0,innerWidth, innerHeight);
   everythingElse.backgroundDraw();
+  everythingElse.coinsUpdate();
   everythingElse.healthBarDraw();
-  petObject.statUpdate();
+  petObject.healthUpdate();
   petObject.update();
 }
 
