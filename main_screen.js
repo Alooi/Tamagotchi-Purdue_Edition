@@ -23,7 +23,7 @@ var petType = "dog";
 var maxHealth = 260;
 var maxHunger = 260;
 var maxThirst = 260;
-var coins = 5;
+var coins = 10;
 var dead = false;
 
 //
