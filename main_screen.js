@@ -83,11 +83,11 @@ function draw_everthing_else()
 
   this.coinsUpdate = function()
   {
-    c.beginPath();
-    c.fillStyle = "white";
-    c.fillRect(20,133,340,84);
-    // c.font = "5px Arial";
-    c.fillText("$",25,166);
+    c.font = "35px Arial Black";
+    c.fillText("$" + coins,25,166);
+    // c.beginPath();
+    // c.fillStyle = "white";
+    // c.fillRect(20,133,340,84);
   }
 }
 
@@ -167,6 +167,11 @@ feedButton.addEventListener("click", feed);
 collectButton.addEventListener("click", collect);
 function feed()
 {
+  if (coins < 1)
+  {
+    alert("You don't have the moneys.")
+  }
+  else
   petObject.feed();
 }
 function collect()
@@ -175,10 +180,10 @@ function collect()
   {
     return Math.floor(Math.random() * Math.floor(max));
   }
-  for (i = 0; i < nCoins; i++)
-  {
-    getRandomInt()
-  }
+  // for (i = 0; i < nCoins; i++)
+  // {
+  //   getRandomInt()
+  // }
 }
 
 function animate(){
