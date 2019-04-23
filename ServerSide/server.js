@@ -31,7 +31,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                            console.log("Data could not be saved." + error);
                        } 
                        else {
-                           console.log("Data saved successfully.");
+                           console.log("Data saved successfully!");
                        }
                 });
             }
