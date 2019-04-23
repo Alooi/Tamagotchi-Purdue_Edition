@@ -1,0 +1,17 @@
+{
+  "name": "tamagotchi_server2",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "'",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.16.4",
+    "firebase": "^5.10.0",
+    "firebase-admin": "^7.3.0"
+  }
+}
