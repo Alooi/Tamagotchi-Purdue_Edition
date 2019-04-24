@@ -29,7 +29,7 @@ if (confirm("Create new account?")) {
   var playereName = prompt("Enter New Username", "Username");
   var playerePass = prompt("Enter New Password", "Password");
 
-  var url = 'http://localhost:8080/signup';
+  //var url = 'http://localhost:8080/signup';
   var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
   console.log(params);
   http.open('POST', url, true);
@@ -42,7 +42,7 @@ if (confirm("Create new account?")) {
   var playereName = prompt("Enter Username", "Username");
   var playerePass = prompt("Enter Password", "Password");
 
-  var url = 'http://localhost:8080/signin';
+  //var url = 'http://localhost:8080/signin';
   var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
   console.log(params);
   http.open('POST', url, true);
@@ -56,7 +56,7 @@ if (confirm("Create new account?")) {
 //todo GET USER INFO.
 function getInfo()
 {
-  var url = 'http://localhost:8080/signin';
+  //var url = 'http://localhost:8080/signin';
   var params = JSON.stringify({uid: UserID});
   console.log(params);
   http.open('POST', url, true);
