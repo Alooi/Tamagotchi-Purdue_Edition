@@ -45,7 +45,7 @@ if (confirm("Create new account?")) {
   var playereName = prompt("Enter Username", "Username");
   var playerePass = prompt("Enter Password", "Password");
 
-  var url = url + "/signin";
+  var url = url + "/login";
   var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
   console.log(params);
   http.open('POST', url, true);
@@ -57,18 +57,6 @@ if (confirm("Create new account?")) {
 }
 
 //todo GET USER INFO.
-function getInfo()
-{
-  //var url = 'http://localhost:8080/signin';
-  var params = JSON.stringify({uid: UserID});
-  console.log(params);
-  http.open('POST', url, true);
-  
-  //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/json');
-  http.send(params);
-}
-
 
 
 // var petType = prompt("which pet you want?", "cat/dog");
