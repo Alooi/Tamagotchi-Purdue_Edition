@@ -12,7 +12,9 @@ var collectButton = document.getElementById("feedButton");
 
 
 
-//var playereName = prompt("Whats your name", "Enter name here");
+var playereName = prompt("Enter Username", "Username");
+var playerePass = prompt("Enter Password", "Password");
+
 
 // var petType = prompt("which pet you want?", "cat/dog");
 var petType = "dog";
@@ -45,7 +47,7 @@ function aCoin(x,y)
   this.vy = 2;
   
   var coinPic = new Image();
-  coinPic.src = "images/coin.jpg";
+  coinPic.src = "images/coin.jpeg";
   
   this.update = function()
   {
@@ -135,9 +137,9 @@ function aCoin(x,y)
     this.health  = health;
     this.healthV = 0.01;
     this.thirst  = thirst;
-    this.thirstV = 0.03;
+    this.thirstV = 0.02;
     this.hunger  = hunger;
-    this.hungerV = 0.02;
+    this.hungerV = 0.015;
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
     
