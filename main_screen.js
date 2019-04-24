@@ -24,9 +24,13 @@ var maxHealth = 260;
 var maxHunger = 260;
 var maxThirst = 260;
 var coins = 10;
+var nCoins = 5;
 var dead = false;
-
-//
+var collectPressed = false;
+var coinsArr = [];
+var petX = 150;
+var petY = 150;
+var coinSize = 30;
 
 function mouse()
 {
@@ -34,18 +38,39 @@ function mouse()
   var y;
 }
 
-function aCoin()
+function aCoin(x,y)
 {
-  this.x;
-  this.y;
-  this.vy;
+  this.x = x;
+  this.y = y;
+  this.vy = 2;
 
   var coinPic = new Image();
   coinPic.src = "images/coin.jpg";
 
-  this.animate = function()
+  this.update = function()
   {
-    
+    if (this.x < petObject.getX + petX &&
+      this.x + coinSize > petObject.getX &&
+      this.y < petObject.getY + petY &&
+      this.y + coinSize > petObject.getY)
+    {
+      console.log("BOOM");
+    }
+    else
+    {
+      this.y += this.vy;
+      if (this.y > 2*canvas.height)
+        {
+          collectPressed = false;
+          console.log("not pressed")
+        }
+    }
+  } 
+
+  this.draw = function()
+  {
+    c.drawImage(coinPic,this.x,this.y,coinSize,coinSize);
+    //console.log(this.x,this.y);
   }
 }
 
@@ -100,6 +125,15 @@ function pet(petType,x,y,health){
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
 
+    this.getX = function()
+    {
+      return this.x;
+    }
+    this.getY = function()
+    {
+      return this.y;
+    }
+
     this.feed = function()
     {
       if (this.health < maxHealth)
@@ -135,17 +169,18 @@ function pet(petType,x,y,health){
 
   this.draw = function(){
     //console.log(this.x,this.y);
-    c.drawImage(petImage,this.x,this.y,250,250);
+    c.drawImage(petImage,this.x,this.y,petX,petY);
     
   }
 
 
+
   this.update = function(){
-    if (this.x > mouse.x-125)
+    if (this.x > mouse.x-(petX/2))
     {
       this.x -= this.xv;
     }
-    if (this.x < mouse.x-125)
+    if (this.x < mouse.x-(petX/2))
     {
       this.x += this.xv;
     }
@@ -160,11 +195,13 @@ function pet(petType,x,y,health){
 }
 
 
-petObject = new pet(petType,(canvas.width/2),(canvas.height)-250,maxHealth)
+petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth)
 everythingElse = new draw_everthing_else();
 
+collectButton.addEventListener("click", collectPress);
 feedButton.addEventListener("click", feed);
-collectButton.addEventListener("click", collect);
+
+
 function feed()
 {
   if (coins < 1)
@@ -174,22 +211,57 @@ function feed()
   else
   petObject.feed();
 }
+
+function collectPress() 
+{
+  collectPressed = true;
+  console.log("pressed");
+}
+
 function collect()
 {
   function getRandomInt(max) 
   {
     return Math.floor(Math.random() * Math.floor(max));
   }
-  // for (i = 0; i < nCoins; i++)
-  // {
-  //   getRandomInt()
-  // }
+
+
+
+    for (i = 0; i < nCoins; i++)
+    {
+      coinsArr.push( new aCoin(getRandomInt(canvas.width),(getRandomInt(canvas.height))))
+    }
+
+
+  this.update = function()
+  {
+    for (n = 0; n < nCoins; n++)
+    {
+      coinsArr[n].update();
+    }
+  }
+
+  this.animate = function()
+  {
+    for (n = 0; n < nCoins; n++)
+    {
+      coinsArr[n].draw();
+    }
+  }
+
+
 }
+collectables = new collect();
 
 function animate(){
   requestAnimationFrame(animate)
   c.clearRect(0,0,innerWidth, innerHeight);
   everythingElse.backgroundDraw();
+  if (collectPressed)
+  {
+    collectables.update();
+    collectables.animate();
+  }
   everythingElse.coinsUpdate();
   everythingElse.healthBarDraw();
   petObject.healthUpdate();
