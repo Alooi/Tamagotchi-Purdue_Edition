@@ -26,7 +26,7 @@ var uID;
 var playereName;
 var playerePass;
 
-
+var http = new XMLHttpRequest();
 ask();
 
 http.onreadystatechange = function() {//Call a function when the state changes.
@@ -44,7 +44,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
         maxHunger = response.Hunger;
         maxThirst = response.Thirst;
         uID = response.uid;
-        //Coins = response.Coins;
+        Coins = response.coins;
       }
       //todo get userID
   }
@@ -53,7 +53,6 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 
 function ask()
 {
-  var http = new XMLHttpRequest();
   if (confirm("Create new account?")) {
     playereName = prompt("Enter New Username", "Username");
     playerePass = prompt("Enter New Password", "Password");
