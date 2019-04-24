@@ -7,6 +7,7 @@ var c = canvas.getContext('2d');
 
 var feedButton = document.getElementById("feedButton");
 var collectButton = document.getElementById("feedButton");
+var QuitButton = document.getElementById("Quit");
 
 
 
@@ -16,44 +17,80 @@ var collectButton = document.getElementById("feedButton");
 // var playerePass = prompt("Enter Password", "Password");
 //var url = prompt("Type server side URL");
 var url = "https://tamapurdue.pagekite.me";
+var maxHealth = 140;
+var maxHunger = 140;
+var maxThirst = 140;
+var Coins = 20;
+var uID;
 
 var http = new XMLHttpRequest();
+
+ask();
 
 http.onreadystatechange = function() {//Call a function when the state changes.
   if(http.readyState == 4 && http.status == 200) {
       alert(http.responseText);
-      JSON.parse(http.responseText);
+      var response = JSON.parse(http.responseText);
+      if (response.status == "failed")
+      {
+        alert(response.message);
+        ask();
+      }
+      else
+      {
+        maxHealth = response.Health;
+        maxHunger = response.Hunger;
+        maxThirst = response.Thirst;
+        uID = response.uid;
+        //Coins = response.Coins;
+      }
       //todo get userID
   }
 }
 
-if (confirm("Create new account?")) {
-  var playereName = prompt("Enter New Username", "Username");
-  var playerePass = prompt("Enter New Password", "Password");
 
-  var url = url + "/signup";
-  var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
-  console.log(params);
-  http.open('POST', url, true);
-  
-  //Send the proper header information along with the request
-  http.setRequestHeader('Content-Type', 'application/json');
-  //http.setRequestHeader('Origin', 'http://localhost:8080');
-  http.send(params);
+function ask()
+{
+  if (confirm("Create new account?")) {
+    var playereName = prompt("Enter New Username", "Username");
+    var playerePass = prompt("Enter New Password", "Password");
 
-} else {
-  var playereName = prompt("Enter Email", "Email");
-  var playerePass = prompt("Enter Password", "Password");
+    var url = url + "/signup";
+    var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
+    console.log(params);
+    http.open('POST', url, true);
+    
+    //Send the proper header information along with the request
+    http.setRequestHeader('Content-Type', 'application/json');
+    //http.setRequestHeader('Origin', 'http://localhost:8080');
+    http.send(params);
 
-  var url = url + "/login";
-  var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
-  console.log(params);
-  http.open('POST', url, true);
-  
-  //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/json');
-  http.send(params);
+  } else {
+    var playereName = prompt("Enter Email", "Email");
+    var playerePass = prompt("Enter Password", "Password");
 
+    var url = url + "/login";
+    var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
+    console.log(params);
+    http.open('POST', url, true);
+    
+    //Send the proper header information along with the request
+    http.setRequestHeader('Content-type', 'application/json');
+    http.send(params);
+
+  }
+}
+
+function updateInfo()
+{
+    var url = url + "/postUserInfo";
+    var params = JSON.stringify({uid: uID, Email: playereName, Health: petObject.health, Hunger: petObject.hunger, Thirst: petObject.thirst, coins: Coins});
+    console.log(params);
+    http.open('POST', url, true);
+    
+    //Send the proper header information along with the request
+    http.setRequestHeader('Content-type', 'application/json');
+    http.send(params);
 }
 
 //todo GET USER INFO.
@@ -65,17 +102,13 @@ var petType = "dog";
 //var petType = "cat.png";
 
 //Stats to be retrived from the data base.
-var maxHealth = 140;
-var maxHunger = 140;
-var maxThirst = 140;
-var coins = 10;
 var nCoins = 5;
 var dead = false;
 var collectPressed = false;
-var coinsArr = [];
+var CoinsArr = [];
 var petX = 150;
 var petY = 150;
-var coinSize = 30;
+var Coinsize = 30;
 
 function mouse()
 {
@@ -95,9 +128,9 @@ function aCoin(x,y)
   this.update = function()
   {
     if (this.x < petObject.getX + petX &&
-      this.x + coinSize > petObject.getX &&
+      this.x + Coinsize > petObject.getX &&
       this.y < petObject.getY + petY &&
-      this.y + coinSize > petObject.getY)
+      this.y + Coinsize > petObject.getY)
       {
         console.log("BOOM");
       }
@@ -114,7 +147,7 @@ function aCoin(x,y)
     
     this.draw = function()
     {
-      c.drawImage(coinPic,this.x,this.y,coinSize,coinSize);
+      c.drawImage(coinPic,this.x,this.y,Coinsize,Coinsize);
       //console.log(this.x,this.y);
     }
 }
@@ -163,10 +196,10 @@ function aCoin(x,y)
       c.drawImage(hungerhBar,20,150,180,43);
     }
     
-    this.coinsUpdate = function()
+    this.CoinsUpdate = function()
     {
       c.font = "35px Arial Black";
-      c.fillText("$" + coins,canvas.width-100,canvas.height-30);
+      c.fillText("$" + Coins,canvas.width-100,canvas.height-30);
       // c.beginPath();
       // c.fillStyle = "white";
       // c.fillRect(20,133,340,84);
@@ -201,7 +234,7 @@ function aCoin(x,y)
       {
         console.log("it eats");
         this.hunger += 10;
-        coins--;
+        Coins--;
       }
       else
       {
@@ -215,7 +248,7 @@ function aCoin(x,y)
       {
         console.log("it drinks");
         this.thirst += 10;
-        coins--;
+        Coins--;
       }
       else
       {
@@ -229,7 +262,7 @@ function aCoin(x,y)
       {
         console.log("healed");
         this.health += 10;
-        coins--;
+        Coins--;
       }
       else
       {
@@ -323,12 +356,19 @@ function aCoin(x,y)
   feedButton.addEventListener("click", feed);
   drinkButton.addEventListener("click", drink);
   healButton.addEventListener("click", heal);
+  QuitButton.addEventListener("click", quitApp);
+
+  function quitApp()
+  {
+    updateInfo();
+    self.close();
+  }
 
   
   
   function feed()
   {
-    if (coins < 1)
+    if (Coins < 1)
     {
       alert("You don't have the moneys.")
     }
@@ -338,7 +378,7 @@ function aCoin(x,y)
 
   function drink()
   {
-    if (coins < 1)
+    if (Coins < 1)
     {
       alert("You don't have the moneys.")
     }
@@ -348,7 +388,7 @@ function aCoin(x,y)
 
   function heal()
   {
-    if (coins < 1)
+    if (Coins < 1)
     {
       alert("You don't have the moneys.")
     }
@@ -373,7 +413,7 @@ function aCoin(x,y)
     
     for (i = 0; i < nCoins; i++)
     {
-      coinsArr.push( new aCoin(getRandomInt(canvas.width),-(getRandomInt(canvas.height))))
+      CoinsArr.push( new aCoin(getRandomInt(canvas.width),-(getRandomInt(canvas.height))))
     }
     
     
@@ -381,7 +421,7 @@ function aCoin(x,y)
     {
       for (n = 0; n < nCoins; n++)
       {
-        coinsArr[n].update();
+        CoinsArr[n].update();
       }
     }
     
@@ -389,7 +429,7 @@ function aCoin(x,y)
     {
       for (n = 0; n < nCoins; n++)
       {
-        coinsArr[n].draw();
+        CoinsArr[n].draw();
       }
     }
     
@@ -406,7 +446,7 @@ function aCoin(x,y)
       collectables.update();
       collectables.animate();
     }
-    everythingElse.coinsUpdate();
+    everythingElse.CoinsUpdate();
     everythingElse.healthBarDraw();
     petObject.healthUpdate();
     everythingElse.thirstBarDraw();
