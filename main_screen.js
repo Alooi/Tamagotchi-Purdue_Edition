@@ -15,7 +15,7 @@ var collectButton = document.getElementById("feedButton");
 // var playereName = prompt("Enter Username", "Username");
 // var playerePass = prompt("Enter Password", "Password");
 //var url = prompt("Type server side URL");
-var url = "tamapurdue.pagekite.me";
+var url = "https://tamapurdue.pagekite.me";
 
 var http = new XMLHttpRequest();
 
@@ -37,7 +37,8 @@ if (confirm("Create new account?")) {
   http.open('POST', url, true);
   
   //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/json');
+  http.setRequestHeader('Content-Type', 'application/json');
+  //http.setRequestHeader('Origin', 'http://localhost:8080');
   http.send(params);
 
 } else {
