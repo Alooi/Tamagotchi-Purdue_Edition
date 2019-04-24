@@ -114,11 +114,12 @@ app.post('/postUserInfo', function(req,res) {
     var hunger = req.body.Hunger;
     var health = req.body.Health;
     var thirst = req.body.Thirst;
+    var coins = req.body.coins;
     var referencePath = '/Users/'+uid+'/';
     var userReference = admin.database().ref(referencePath);
     var date = new Date();
     var timestamp = date.getTime();
-    userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, coins: usrInfo.coins, time: timestamp}, 
+    userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, coins: coins, time: timestamp}, 
         function(error) {
             if (error) {
                 res.end(JSON.stringify({status: 'failed', error: error}));
