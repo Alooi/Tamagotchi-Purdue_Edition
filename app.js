@@ -4,6 +4,10 @@ var bodyParser = require('body-parser');
 var admin = require('firebase-admin');
 var firebase = require('firebase');
 
+//Cross-Origin access config
+var cors = require('cors');
+app.use(cors({origin: "*"}));
+
 var userObj = {
     table: []
 };
@@ -47,7 +51,7 @@ app.post('/signup', function(req,res) {
                     console.log("Data could not be saved." + error);
                 } 
                 else {
-                    res.end(JSON.stringify({status: 'success', uid: userRecord.uid}));
+                    res.end(JSON.stringify({status: 'success', uid: userRecord.uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, time: timestamp}));
                     console.log('Successfully created new user:', userRecord.uid);
                 }
             });
@@ -71,8 +75,8 @@ app.post('/login', function(req,res) {
             var userReference = admin.database().ref(referencePath);
             userReference.on("value", 
 			  function(snapshot) {
-                    console.log(snapshot.val());
-                    res.end(JSON.stringify(snapshot.val()));
+                    var usrInfo = snapshot.val();
+                    res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, time: usrInfo.time}));
                     userReference.off("value");
 					}, 
 			  function (errorObject) {
@@ -93,9 +97,9 @@ app.post('/getUserInfo', function(req,res) {
     var userReference = admin.database().ref(referencePath);
     userReference.on("value", 
         function(snapshot) {
-          console.log(snapshot.val());
-          res.end(JSON.stringify(snapshot.val()));
-          userReference.off("value");
+            var usrInfo = snapshot.val();
+            res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, time: usrInfo.time}));
+            userReference.off("value");
           }, 
         function (errorObject) {
           console.log("The read failed: " + errorObject.code);
@@ -129,4 +133,3 @@ app.post('/postUserInfo', function(req,res) {
 app.listen(8080, function () {
 console.log('Sample app listening on port');
 });
-        
