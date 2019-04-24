@@ -23,6 +23,9 @@ var maxThirst = 140;
 var Coins = 20;
 var uID;
 
+var playereName;
+var playerePass;
+
 
 ask();
 
@@ -52,8 +55,8 @@ function ask()
 {
   var http = new XMLHttpRequest();
   if (confirm("Create new account?")) {
-    var playereName = prompt("Enter New Username", "Username");
-    var playerePass = prompt("Enter New Password", "Password");
+    playereName = prompt("Enter New Username", "Username");
+    playerePass = prompt("Enter New Password", "Password");
 
     var url = url + "/signup";
     var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
@@ -66,8 +69,8 @@ function ask()
     http.send(params);
 
   } else {
-    var playereName = prompt("Enter Email", "Email");
-    var playerePass = prompt("Enter Password", "Password");
+    playereName = prompt("Enter Email", "Email");
+    playerePass = prompt("Enter Password", "Password");
 
     var url = url + "/login";
     var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
