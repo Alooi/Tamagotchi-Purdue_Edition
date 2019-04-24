@@ -1,7 +1,7 @@
 {
   "name": "tamagotchi_server2",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server2.js",
   "scripts": {
     "test": "'",
     "start": "node server.js"
