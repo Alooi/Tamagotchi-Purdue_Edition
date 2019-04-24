@@ -12,8 +12,13 @@ Use coins to help your pet eat, drink and get well!
 Move your pet to collect coins 
 
 Colleting coins implemented using object collision
+
 Visuals created using Sketch
+
 Server implemented using node.js and express.js
+
 Database is implemented using Firebase Admin and Firebase Javascript SDK
+
 Front-end implemented using Javascript
+
 Server hosted in local rasberry pi, tunneled to open internet using Pagekite.py
