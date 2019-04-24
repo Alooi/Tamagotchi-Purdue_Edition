@@ -14,6 +14,7 @@ var collectButton = document.getElementById("feedButton");
 
 // var playereName = prompt("Enter Username", "Username");
 // var playerePass = prompt("Enter Password", "Password");
+//var url = prompt("Type server side URL");
 var url = prompt("Type server side URL");
 
 var http = new XMLHttpRequest();
@@ -21,6 +22,7 @@ var http = new XMLHttpRequest();
 http.onreadystatechange = function() {//Call a function when the state changes.
   if(http.readyState == 4 && http.status == 200) {
       alert(http.responseText);
+      JSON.parse(http.responseText);
       //todo get userID
   }
 }
@@ -29,26 +31,26 @@ if (confirm("Create new account?")) {
   var playereName = prompt("Enter New Username", "Username");
   var playerePass = prompt("Enter New Password", "Password");
 
-  //var url = 'http://localhost:8080/signup';
+  var url = url + "/signup";
   var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
   console.log(params);
   http.open('POST', url, true);
   
   //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  http.setRequestHeader('Content-type', 'application/json');
   http.send(params);
 
 } else {
   var playereName = prompt("Enter Username", "Username");
   var playerePass = prompt("Enter Password", "Password");
 
-  //var url = 'http://localhost:8080/signin';
+  var url = url + "/signin";
   var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
   console.log(params);
   http.open('POST', url, true);
   
   //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  http.setRequestHeader('Content-type', 'application/json');
   http.send(params);
 
 }
@@ -62,7 +64,7 @@ function getInfo()
   http.open('POST', url, true);
   
   //Send the proper header information along with the request
-  http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  http.setRequestHeader('Content-type', 'application/json');
   http.send(params);
 }
 
