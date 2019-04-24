@@ -43,7 +43,6 @@ firebase.auth().onAuthStateChanged(function(user) {
       // ...
     }
 });
-
 //Fetch instances
 app.get('/', function (req, res) {
 
