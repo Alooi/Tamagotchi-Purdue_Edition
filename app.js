@@ -44,14 +44,14 @@ app.post('/signup', function(req,res) {
         var userReference = admin.database().ref(referencePath);
         var date = new Date();
         var timestamp = date.getTime();
-        userReference.set({ uid: uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, time: timestamp}, 
+        userReference.set({ uid: uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, coins: 20, time: timestamp}, 
             function(error) {
                 if (error) {
                     res.end(JSON.stringify({status: 'failed', error: error}));
                     console.log("Data could not be saved." + error);
                 } 
                 else {
-                    res.end(JSON.stringify({status: 'success', uid: userRecord.uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, time: timestamp}));
+                    res.end(JSON.stringify({status: 'success', uid: userRecord.uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, coins: 20 , time: timestamp}));
                     console.log('Successfully created new user:', userRecord.uid);
                 }
             });
@@ -76,7 +76,7 @@ app.post('/login', function(req,res) {
             userReference.on("value", 
 			  function(snapshot) {
                     var usrInfo = snapshot.val();
-                    res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, time: usrInfo.time}));
+                    res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, coins: usrInfo.coins, time: usrInfo.time}));
                     userReference.off("value");
 					}, 
 			  function (errorObject) {
@@ -98,7 +98,7 @@ app.post('/getUserInfo', function(req,res) {
     userReference.on("value", 
         function(snapshot) {
             var usrInfo = snapshot.val();
-            res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, time: usrInfo.time}));
+            res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, coins: usrInfo.coins, time: usrInfo.time}));
             userReference.off("value");
           }, 
         function (errorObject) {
@@ -118,7 +118,7 @@ app.post('/postUserInfo', function(req,res) {
     var userReference = admin.database().ref(referencePath);
     var date = new Date();
     var timestamp = date.getTime();
-    userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, time: timestamp}, 
+    userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, coins: usrInfo.coins, time: timestamp}, 
         function(error) {
             if (error) {
                 res.end(JSON.stringify({status: 'failed', error: error}));
