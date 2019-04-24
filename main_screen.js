@@ -14,6 +14,7 @@ var collectButton = document.getElementById("feedButton");
 
 // var playereName = prompt("Enter Username", "Username");
 // var playerePass = prompt("Enter Password", "Password");
+var url = prompt("Type server side URL");
 
 var http = new XMLHttpRequest();
 
