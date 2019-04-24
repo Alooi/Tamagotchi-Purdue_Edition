@@ -47,7 +47,7 @@ app.post('/signup', function(req,res) {
         userReference.set({ uid: uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, coins: 20, time: timestamp}, 
             function(error) {
                 if (error) {
-                    res.end(JSON.stringify({status: 'failed', error: error}));
+                    res.end(JSON.stringify({status: 'failed', error: error.message}));
                     console.log("Data could not be saved." + error);
                 } 
                 else {
@@ -57,7 +57,7 @@ app.post('/signup', function(req,res) {
             });
         })
         .catch(function(error) {
-            res.end(JSON.stringify({status: 'failed', error: error}));
+            res.end(JSON.stringify({status: 'failed', error: error.message}));
             console.log('Error creating new user:', error);
         });
     });
@@ -76,17 +76,18 @@ app.post('/login', function(req,res) {
             userReference.on("value", 
 			  function(snapshot) {
                     var usrInfo = snapshot.val();
+                    console.log("worked");
                     res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, coins: usrInfo.coins, time: usrInfo.time}));
                     userReference.off("value");
 					}, 
 			  function (errorObject) {
 					console.log("The read failed: " + errorObject.code);
-                    res.end(JSON.stringify({status: "failed", error: errorObject}));
+                    res.end(JSON.stringify({status: "failed", error: errorObject.message}));
             });
         })
         .catch(function (err) {
             console.log(err);
-            res.end(JSON.stringify({status: 'failed', error: err}));
+            res.end(JSON.stringify({status: 'failed', error: err.message}));
         });
 });
 app.post('/getUserInfo', function(req,res) {
@@ -98,12 +99,13 @@ app.post('/getUserInfo', function(req,res) {
     userReference.on("value", 
         function(snapshot) {
             var usrInfo = snapshot.val();
+            console.log("worked");
             res.end(JSON.stringify({status: "success", uid: uid, Email: usrInfo.Email, Health: usrInfo.Health, Hunger: usrInfo.Hunger, Thirst:usrInfo.Thirst, coins: usrInfo.coins, time: usrInfo.time}));
             userReference.off("value");
           }, 
         function (errorObject) {
           console.log("The read failed: " + errorObject.code);
-          res.end(JSON.stringify({status: "failed", error: errorObject}));
+          res.end(JSON.stringify({status: "failed", error: errorObject.message}));
   });
 });
 app.post('/postUserInfo', function(req,res) {
@@ -122,7 +124,7 @@ app.post('/postUserInfo', function(req,res) {
     userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, coins: coins, time: timestamp}, 
         function(error) {
             if (error) {
-                res.end(JSON.stringify({status: 'failed', error: error}));
+                res.end(JSON.stringify({status: 'failed', error: error.message}));
                 console.log("Data could not be saved." + error);
             } 
             else {
@@ -132,5 +134,5 @@ app.post('/postUserInfo', function(req,res) {
 });
 // Start http server and listen to port 3000.
 app.listen(8080, function () {
-console.log('Sample app listening on port');
+console.log('Sample app listening on port 8080');
 });
