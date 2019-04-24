@@ -1,10 +1,10 @@
 {
-  "name": "tamagotchi_server2",
+  "name": "tamagotchi_server",
   "version": "1.0.0",
-  "main": "server2.js",
+  "main": "app.js",
   "scripts": {
     "test": "'",
-    "start": "node server.js"
+    "start": "app.js"
   },
   "author": "",
   "license": "ISC",
