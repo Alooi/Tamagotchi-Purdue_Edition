@@ -20,9 +20,9 @@ var petType = "dog";
 //var petType = "cat.png";
 
 //Stats to be retrived from the data base.
-var maxHealth = 260;
-var maxHunger = 260;
-var maxThirst = 260;
+var maxHealth = 140;
+var maxHunger = 140;
+var maxThirst = 140;
 var coins = 10;
 var nCoins = 5;
 var dead = false;
@@ -102,38 +102,42 @@ function aCoin(x,y)
     this.healthBarDraw = function()
     {
       var healthBar = new Image();
-      healthBar.src = "images/healthBar.jpg";
-      c.drawImage(healthBar,20,30,340,85);
-    }
-    this.hungerBarDraw = function()
-    {
-      var healthBar = new Image();
-      healthBar.src = "images/healthBar.jpg";
-      c.drawImage(healthBar,20,30,340,85);
+      healthBar.src = "images/newHealthBar.jpeg";
+      c.drawImage(healthBar,20,30,180,43);
     }
     this.thirstBarDraw = function()
     {
-      var healthBar = new Image();
-      healthBar.src = "images/healthBar.jpg";
-      c.drawImage(healthBar,20,30,340,85);
+      var thirsthBar = new Image();
+      thirsthBar.src = "images/thirstBar.jpeg";
+      c.drawImage(thirsthBar,20,90,180,43);
+    }
+    this.hungerBarDraw = function()
+    {
+      var hungerhBar = new Image();
+      hungerhBar.src = "images/hungerBar.jpeg";
+      c.drawImage(hungerhBar,20,150,180,43);
     }
     
     this.coinsUpdate = function()
     {
       c.font = "35px Arial Black";
-      c.fillText("$" + coins,25,canvas.height-30);
+      c.fillText("$" + coins,canvas.width-100,canvas.height-30);
       // c.beginPath();
       // c.fillStyle = "white";
       // c.fillRect(20,133,340,84);
     }
   }
   
-  function pet(petType,x,y,health){
+  function pet(petType,x,y,health,thirst,hunger){
     this.x = x;
     this.y = y;
     this.xv = 5;
     this.health  = health;
-    this.healthV = 0.08;
+    this.healthV = 0.01;
+    this.thirst  = thirst;
+    this.thirstV = 0.03;
+    this.hunger  = hunger;
+    this.hungerV = 0.02;
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
     
@@ -148,9 +152,37 @@ function aCoin(x,y)
     
     this.feed = function()
     {
+      if (this.hunger < maxHunger)
+      {
+        console.log("it eats");
+        this.hunger += 10;
+        coins--;
+      }
+      else
+      {
+        console.log("Tummy is full buddy");
+      }
+      
+    }
+    this.drink = function()
+    {
+      if (this.thirst < maxThirst)
+      {
+        console.log("it drinks");
+        this.thirst += 10;
+        coins--;
+      }
+      else
+      {
+        console.log("Tummy is full buddy");
+      }
+      
+    }
+    this.heal = function()
+    {
       if (this.health < maxHealth)
       {
-        console.log("been fed");
+        console.log("healed");
         this.health += 10;
         coins--;
       }
@@ -163,7 +195,7 @@ function aCoin(x,y)
     
     this.healthUpdate = function()
     {
-      if (this.health > 10)
+      if (this.health > 5)
       {
         this.health -= this.healthV;
       }
@@ -173,7 +205,39 @@ function aCoin(x,y)
       }
       c.beginPath();
       c.fillStyle = "red";
-      c.fillRect(93,53,this.health,40);
+      c.fillRect(60,42,this.health,20);
+      c.stroke();
+    }
+
+    this.thirstUpdate = function()
+    {
+      if (this.thirst > 5)
+      {
+        this.thirst -= this.thirstV;
+      }
+      else
+      {
+        Dead();
+      }
+      c.beginPath();
+      c.fillStyle = "blue";
+      c.fillRect(60,102,this.thirst,20);
+      c.stroke();
+    }
+
+    this.hungerUpdate = function()
+    {
+      if (this.hunger > 5)
+      {
+        this.hunger -= this.hungerV;
+      }
+      else
+      {
+        Dead();
+      }
+      c.beginPath();
+      c.fillStyle = "green";
+      c.fillRect(60,162,this.hunger,20);
       c.stroke();
     }
     
@@ -188,11 +252,11 @@ function aCoin(x,y)
     
     
     this.update = function(){
-      if (this.x > mouse.x-(petX/2))
+      if (this.x > mouse.x-(petX/2) && mouse.y > canvas.height/2)
       {
         this.x -= this.xv;
       }
-      if (this.x < mouse.x-(petX/2))
+      if (this.x < mouse.x-(petX/2) && mouse.y > canvas.height/2)
       {
         this.x += this.xv;
       }
@@ -207,11 +271,14 @@ function aCoin(x,y)
   }
   
   
-  petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth)
+  petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger)
   everythingElse = new draw_everthing_else();
   
   collectButton.addEventListener("click", collectPress);
   feedButton.addEventListener("click", feed);
+  drinkButton.addEventListener("click", drink);
+  healButton.addEventListener("click", heal);
+
   
   
   function feed()
@@ -222,6 +289,26 @@ function aCoin(x,y)
     }
     else
     petObject.feed();
+  }
+
+  function drink()
+  {
+    if (coins < 1)
+    {
+      alert("You don't have the moneys.")
+    }
+    else
+    petObject.drink();
+  }
+
+  function heal()
+  {
+    if (coins < 1)
+    {
+      alert("You don't have the moneys.")
+    }
+    else
+    petObject.heal();
   }
   
   function collectPress() 
@@ -241,7 +328,7 @@ function aCoin(x,y)
     
     for (i = 0; i < nCoins; i++)
     {
-      coinsArr.push( new aCoin(getRandomInt(canvas.width),(getRandomInt(canvas.height))))
+      coinsArr.push( new aCoin(getRandomInt(canvas.width),-(getRandomInt(canvas.height))))
     }
     
     
@@ -277,6 +364,11 @@ function aCoin(x,y)
     everythingElse.coinsUpdate();
     everythingElse.healthBarDraw();
     petObject.healthUpdate();
+    everythingElse.thirstBarDraw();
+    petObject.thirstUpdate();
+    everythingElse.hungerBarDraw();
+    petObject.hungerUpdate();
+    
     petObject.update();
   }
   
