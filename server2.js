@@ -38,7 +38,9 @@ app.post('/signup', function(req,res) {
         var uid = userRecord.uid;
         var referencePath = '/Users/'+uid+'/';
         var userReference = admin.database().ref(referencePath);
-        userReference.set({ uid: uid, Email: UserEmail, Health: 100, Hunger: 100, Thirst: 100}, 
+        var date = new Date();
+        var timestamp = date.getTime();
+        userReference.set({ uid: uid, Email: UserEmail, Health: 140, Hunger: 140, Thirst: 140, time: timestamp}, 
             function(error) {
                 if (error) {
                     res.end(JSON.stringify({status: 'failed', error: error}));
@@ -59,7 +61,7 @@ app.post('/signup', function(req,res) {
 
 app.post('/login', function(req,res) {
     console.log("HTTP Put Request: /login");
-    res.contentType('application/json')
+    res.contentType('application/json');
     var UserEmail = req.body.UserEmail;
     var UserPassword = req.body.UserPassword;
     firebase.auth().signInWithEmailAndPassword(UserEmail, UserPassword)
@@ -69,6 +71,7 @@ app.post('/login', function(req,res) {
             var userReference = admin.database().ref(referencePath);
             userReference.on("value", 
 			  function(snapshot) {
+                    console.log(snapshot.val());
                     res.end(JSON.stringify(snapshot.val()));
                     userReference.off("value");
 					}, 
@@ -82,17 +85,48 @@ app.post('/login', function(req,res) {
             res.end(JSON.stringify({status: 'failed', error: err}));
         });
 });
-app.get('/getUsrInfo', function(req,res) {
-    if (firebase.auth() == null) console.log('Auth: null');
-    else console.log('Auth not null');
-    console.log(firebase.auth().currentUser);
-    res.end();
+app.post('/getUserInfo', function(req,res) {
+    console.log("HTTP Post Request: /getUserInfo");
+    res.contentType('application/json');
+    var uid = req.body.uid;
+    var referencePath = '/Users/'+uid+'/';
+    var userReference = admin.database().ref(referencePath);
+    userReference.on("value", 
+        function(snapshot) {
+          console.log(snapshot.val());
+          res.end(JSON.stringify(snapshot.val()));
+          userReference.off("value");
+          }, 
+        function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+          res.end(JSON.stringify({status: "failed", error: errorObject}));
+  });
 });
-app.get('/postUsrInfo', function(req,res) {
-
+app.post('/postUserInfo', function(req,res) {
+    console.log("HTTP Post Request: /postUserInfo");
+    res.contentType('application/json');
+    var uid = req.body.uid;
+    var UserEmail = req.body.Email;
+    var hunger = req.body.Hunger;
+    var health = req.body.Health;
+    var thirst = req.body.Thirst;
+    var referencePath = '/Users/'+uid+'/';
+    var userReference = admin.database().ref(referencePath);
+    var date = new Date();
+    var timestamp = date.getTime();
+    userReference.set({ uid: uid, Email: UserEmail, Health: health, Hunger: hunger, Thirst: thirst, time: timestamp}, 
+        function(error) {
+            if (error) {
+                res.end(JSON.stringify({status: 'failed', error: error}));
+                console.log("Data could not be saved." + error);
+            } 
+            else {
+                res.end(JSON.stringify({status: 'success'}));
+            }
+        });
 });
 // Start http server and listen to port 3000.
 app.listen(8080, function () {
 console.log('Sample app listening on port');
-})
+});
         
