@@ -23,7 +23,6 @@ var maxThirst = 140;
 var Coins = 20;
 var uID;
 
-var http = new XMLHttpRequest();
 
 ask();
 
@@ -51,6 +50,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 
 function ask()
 {
+  var http = new XMLHttpRequest();
   if (confirm("Create new account?")) {
     var playereName = prompt("Enter New Username", "Username");
     var playerePass = prompt("Enter New Password", "Password");
