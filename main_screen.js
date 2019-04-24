@@ -42,7 +42,7 @@ if (confirm("Create new account?")) {
   http.send(params);
 
 } else {
-  var playereName = prompt("Enter Username", "Username");
+  var playereName = prompt("Enter Email", "Email");
   var playerePass = prompt("Enter Password", "Password");
 
   var url = url + "/login";
