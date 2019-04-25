@@ -6,8 +6,9 @@ canvas.width = window.innerWidth-50;
 var c = canvas.getContext('2d');
 
 var feedButton = document.getElementById("feedButton");
-var collectButton = document.getElementById("feedButton");
+var collectButton = document.getElementById("collectButton");
 var QuitButton = document.getElementById("Quit");
+var trainButton = document.getElementById("trainButton");
 
 
 
@@ -55,10 +56,14 @@ http.onreadystatechange = function() {//Call a function when the state changes.
         nowTime = new Date();
         responseTime = response.time;
 
-        maxHealth = maxHealth - ((nowTime - responseTime)/10000);
+        maxHealth = maxHealth - ((nowTime - responseTime)/100000);
+        if (maxHealth < 5)
+        {
+          maxHealth = 4;
+        }
+        else dead = false;
         petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
-        dead = false;
-
+        
       }
       //todo get userID
   }
@@ -69,7 +74,7 @@ function ask()
 {
   var url = "https://tamapurdue.pagekite.me";
   if (confirm("Press Ok to create a new account, or cancel if you already have an account")) {
-    playereName = prompt("Enter New Username", "Username");
+    playereName = prompt("Enter New Username", "Default@forTesting.test");
     playerePass = prompt("Enter New Password", "Password");
 
     url = url + "/signup";
@@ -83,7 +88,7 @@ function ask()
     http.send(params);
 
   } else {
-    playereName = prompt("Enter your Email to log-in", "Email");
+    playereName = prompt("Enter your Email to log-in", "Default@forTesting.test");
     playerePass = prompt("Enter a Password", "Password");
 
     url = url + "/login";
@@ -143,12 +148,15 @@ function aCoin(x,y)
   
   this.update = function()
   {
-    if (this.x < petObject.getX + petX &&
-      this.x + Coinsize > petObject.getX &&
-      this.y < petObject.getY + petY &&
-      this.y + Coinsize > petObject.getY)
+    //console.log(this.x, this.y, petObject.x, petObject.y)
+    if (this.x < petObject.x + petX &&
+      this.x + Coinsize > petObject.x &&
+      this.y < petObject.y + petY &&
+      this.y + Coinsize > petObject.y)
       {
-        console.log("BOOM");
+        //console.log("BOOM");
+        Coins++;
+        this.y = canvas.height+1;
       }
       else
       {
@@ -215,7 +223,7 @@ function aCoin(x,y)
     this.CoinsUpdate = function()
     {
       c.font = "35px Arial Black";
-      c.fillText("$" + Coins,canvas.width-100,canvas.height-30);
+      c.fillText("$" + Coins + " pet speed: " + petObject.xv ,canvas.width-330,60);
       // c.beginPath();
       // c.fillStyle = "white";
       // c.fillRect(20,133,340,84);
@@ -234,15 +242,13 @@ function aCoin(x,y)
     this.hungerV = 0.015;
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
-    
-    this.getX = function()
+
+    this.train = function()
     {
-      return this.x;
+      this.xv += 1;
+      Coins -= 5;
     }
-    this.getY = function()
-    {
-      return this.y;
-    }
+
     
     this.feed = function()
     {
@@ -278,7 +284,7 @@ function aCoin(x,y)
       {
         console.log("healed");
         this.health += 10;
-        Coins--;
+        Coins -= 3;
       }
       else
       {
@@ -367,13 +373,20 @@ function aCoin(x,y)
 
   
   everythingElse = new draw_everthing_else();
+  collectables = new collect();
   
   collectButton.addEventListener("click", collectPress);
   feedButton.addEventListener("click", feed);
   drinkButton.addEventListener("click", drink);
   healButton.addEventListener("click", heal);
   QuitButton.addEventListener("click", quitApp);
+  trainButton.addEventListener("click", train);
 
+
+  function train()
+  {
+    petObject.train();
+  }
 
 
   function quitApp()
@@ -418,6 +431,7 @@ function aCoin(x,y)
   function collectPress() 
   {
     collectPressed = true;
+    collectables.new();
     console.log("pressed");
   }
   
@@ -427,12 +441,14 @@ function aCoin(x,y)
     {
       return Math.floor(Math.random() * Math.floor(max));
     }
-    
-    
-    
-    for (i = 0; i < nCoins; i++)
+    this.new = function()
     {
-      CoinsArr.push( new aCoin(getRandomInt(canvas.width),-(getRandomInt(canvas.height))))
+      console.log(CoinsArr);
+      CoinsArr = [];
+      for (i = 0; i < nCoins; i++)
+      {
+        CoinsArr.push( new aCoin(getRandomInt(canvas.width),-(getRandomInt(canvas.height))))
+      }
     }
     
     
@@ -454,7 +470,6 @@ function aCoin(x,y)
     
     
   }
-  collectables = new collect();
   
   function animate(){
     requestAnimationFrame(animate)
@@ -465,7 +480,7 @@ function aCoin(x,y)
       collectables.update();
       collectables.animate();
     }
-    everythingElse.CoinsUpdate();
+    
     everythingElse.healthBarDraw();
     petObject.healthUpdate();
     everythingElse.thirstBarDraw();
@@ -474,6 +489,7 @@ function aCoin(x,y)
     petObject.hungerUpdate();
     
     petObject.update();
+    everythingElse.CoinsUpdate();
   }
   
   animate();
