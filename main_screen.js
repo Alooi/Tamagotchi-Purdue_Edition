@@ -235,11 +235,11 @@ function aCoin(x,y)
     this.y = y;
     this.xv = 5;
     this.health  = health;
-    this.healthV = 0.008;
+    this.healthV = 0.007;
     this.thirst  = thirst;
-    this.thirstV = 0.013;
+    this.thirstV = 0.01;
     this.hunger  = hunger;
-    this.hungerV = 0.01;
+    this.hungerV = 0.009;
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
 
