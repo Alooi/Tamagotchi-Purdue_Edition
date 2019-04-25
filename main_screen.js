@@ -34,6 +34,26 @@ var petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,
 var http = new XMLHttpRequest();
 ask();
 
+function sound(src) 
+{
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+      this.sound.play();
+  }
+  this.stop = function(){
+      this.sound.pause();
+  }    
+}
+
+var coinDropSound  = new sound("sounds/CoinsDrop.mp3");
+var ChaChing  = new sound("sounds/ChaChing.mp3");
+var backgroundMusic  = new sound("sounds/BackgroundMusic.mp3");
+
 http.onreadystatechange = function() {//Call a function when the state changes.
   if(http.readyState == 4 && http.status == 200) {
       //alert(http.responseText);
@@ -56,18 +76,21 @@ http.onreadystatechange = function() {//Call a function when the state changes.
         nowTime = new Date();
         responseTime = response.time;
 
-        maxHealth = maxHealth - ((nowTime - responseTime)/100000);
+        maxHealth = maxHealth - ((nowTime - responseTime)/500000);
         if (maxHealth < 5)
         {
           maxHealth = 4;
         }
         else dead = false;
         petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
+        //backgroundMusic.play();
         
       }
       //todo get userID
   }
 }
+
+
 
 
 function ask()
@@ -155,6 +178,7 @@ function aCoin(x,y)
       this.y + Coinsize > petObject.y)
       {
         //console.log("BOOM");
+        ChaChing.play();
         Coins++;
         this.y = canvas.height+1;
       }
@@ -397,7 +421,6 @@ function aCoin(x,y)
   }
 
   
-  
   function feed()
   {
     if (Coins < 1)
@@ -432,6 +455,7 @@ function aCoin(x,y)
   {
     collectPressed = true;
     collectables.new();
+    coinDropSound.play();
     console.log("pressed");
   }
   
