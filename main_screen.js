@@ -16,15 +16,19 @@ var QuitButton = document.getElementById("Quit");
 // var playereName = prompt("Enter Username", "Username");
 // var playerePass = prompt("Enter Password", "Password");
 //var url = prompt("Type server side URL");
-var url = "https://tamapurdue.pagekite.me";
-var maxHealth = 140;
-var maxHunger = 140;
-var maxThirst = 140;
-var Coins = 20;
+var maxHealth;
+var maxHunger;
+var maxThirst;
+var Coins;
 var uID;
+var nowTime;
+var responseTime;
+var dead = false;
 
 var playereName;
 var playerePass;
+
+var petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger)
 
 var http = new XMLHttpRequest();
 ask();
@@ -35,16 +39,26 @@ http.onreadystatechange = function() {//Call a function when the state changes.
       var response = JSON.parse(http.responseText);
       if (response.status == "failed")
       {
-        alert(response.message);
+        alert(response.error);
         ask();
       }
       else
       {
+        console.log("success");
+        console.log(response.Health, response.Hunger, response.Thirst);
         maxHealth = response.Health;
         maxHunger = response.Hunger;
         maxThirst = response.Thirst;
         uID = response.uid;
         Coins = response.coins;
+
+        nowTime = new Date();
+        responseTime = response.time;
+
+        maxHealth = maxHealth - ((nowTime - responseTime)/100000);
+        petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
+        dead = false;
+
       }
       //todo get userID
   }
@@ -53,11 +67,12 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 
 function ask()
 {
+  var url = "https://tamapurdue.pagekite.me";
   if (confirm("Create new account?")) {
     playereName = prompt("Enter New Username", "Username");
     playerePass = prompt("Enter New Password", "Password");
 
-    var url = url + "/signup";
+    url = url + "/signup";
     var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
     console.log(params);
     http.open('POST', url, true);
@@ -71,7 +86,7 @@ function ask()
     playereName = prompt("Enter Email", "Email");
     playerePass = prompt("Enter Password", "Password");
 
-    var url = url + "/login";
+    url = url + "/login";
     var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
     console.log(params);
     http.open('POST', url, true);
@@ -85,7 +100,7 @@ function ask()
 
 function updateInfo()
 {
-    var url = url + "/postUserInfo";
+    var url = "https://tamapurdue.pagekite.me/postUserInfo";
     var params = JSON.stringify({uid: uID, Email: playereName, Health: petObject.health, Hunger: petObject.hunger, Thirst: petObject.thirst, coins: Coins});
     console.log(params);
     http.open('POST', url, true);
@@ -105,7 +120,6 @@ var petType = "dog";
 
 //Stats to be retrived from the data base.
 var nCoins = 5;
-var dead = false;
 var collectPressed = false;
 var CoinsArr = [];
 var petX = 150;
@@ -232,7 +246,7 @@ function aCoin(x,y)
     
     this.feed = function()
     {
-      if (this.hunger < maxHunger)
+      if (this.hunger < 140)
       {
         console.log("it eats");
         this.hunger += 10;
@@ -246,7 +260,7 @@ function aCoin(x,y)
     }
     this.drink = function()
     {
-      if (this.thirst < maxThirst)
+      if (this.thirst < 140)
       {
         console.log("it drinks");
         this.thirst += 10;
@@ -260,7 +274,7 @@ function aCoin(x,y)
     }
     this.heal = function()
     {
-      if (this.health < maxHealth)
+      if (this.health < 140)
       {
         console.log("healed");
         this.health += 10;
@@ -350,8 +364,8 @@ function aCoin(x,y)
     
   }
   
+
   
-  petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger)
   everythingElse = new draw_everthing_else();
   
   collectButton.addEventListener("click", collectPress);
@@ -360,9 +374,12 @@ function aCoin(x,y)
   healButton.addEventListener("click", heal);
   QuitButton.addEventListener("click", quitApp);
 
+
+
   function quitApp()
   {
     updateInfo();
+    alert("saving...");
     self.close();
   }
 
