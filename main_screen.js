@@ -68,7 +68,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
 function ask()
 {
   var url = "https://tamapurdue.pagekite.me";
-  if (confirm("Create new account?")) {
+  if (confirm("Press Ok to create a new account, or cancel if you already have an account")) {
     playereName = prompt("Enter New Username", "Username");
     playerePass = prompt("Enter New Password", "Password");
 
@@ -83,8 +83,8 @@ function ask()
     http.send(params);
 
   } else {
-    playereName = prompt("Enter Email", "Email");
-    playerePass = prompt("Enter Password", "Password");
+    playereName = prompt("Enter your Email to log-in", "Email");
+    playerePass = prompt("Enter a Password", "Password");
 
     url = url + "/login";
     var params = JSON.stringify({UserEmail: playereName, UserPassword: playerePass});
