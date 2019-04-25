@@ -55,7 +55,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
         nowTime = new Date();
         responseTime = response.time;
 
-        maxHealth = maxHealth - ((nowTime - responseTime)/100000);
+        maxHealth = maxHealth - ((nowTime - responseTime)/10000);
         petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
         dead = false;
 
