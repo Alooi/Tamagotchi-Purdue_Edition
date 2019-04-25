@@ -124,7 +124,7 @@ var petType = "dog";
 //var petType = "cat.png";
 
 //Stats to be retrived from the data base.
-var nCoins = 5;
+var nCoins = 10;
 var collectPressed = false;
 var CoinsArr = [];
 var petX = 150;
@@ -223,7 +223,7 @@ function aCoin(x,y)
     this.CoinsUpdate = function()
     {
       c.font = "35px Arial Black";
-      c.fillText("$" + Coins + " pet speed: " + petObject.xv ,canvas.width-330,60);
+      c.fillText("$" + Coins,canvas.width-100,60);
       // c.beginPath();
       // c.fillStyle = "white";
       // c.fillRect(20,133,340,84);
@@ -235,11 +235,11 @@ function aCoin(x,y)
     this.y = y;
     this.xv = 5;
     this.health  = health;
-    this.healthV = 0.01;
+    this.healthV = 0.008;
     this.thirst  = thirst;
-    this.thirstV = 0.02;
+    this.thirstV = 0.013;
     this.hunger  = hunger;
-    this.hungerV = 0.015;
+    this.hungerV = 0.01;
     var petImage = new Image();
     petImage.src = "./images/" + petType + ".jpg";
 
@@ -255,7 +255,7 @@ function aCoin(x,y)
       if (this.hunger < 140)
       {
         console.log("it eats");
-        this.hunger += 10;
+        this.hunger += 20;
         Coins--;
       }
       else
@@ -269,7 +269,7 @@ function aCoin(x,y)
       if (this.thirst < 140)
       {
         console.log("it drinks");
-        this.thirst += 10;
+        this.thirst += 20;
         Coins--;
       }
       else
@@ -283,8 +283,8 @@ function aCoin(x,y)
       if (this.health < 140)
       {
         console.log("healed");
-        this.health += 10;
-        Coins -= 3;
+        this.health += 20;
+        Coins -= 2;
       }
       else
       {
