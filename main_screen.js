@@ -14,25 +14,26 @@ var trainButton = document.getElementById("trainButton");
 
 
 
-// var playereName = prompt("Enter Username", "Username");
-// var playerePass = prompt("Enter Password", "Password");
+var playereName = prompt("Enter Username", "Username");
+var playerePass = prompt("Enter Password", "Password");
 //var url = prompt("Type server side URL");
-var maxHealth;
-var maxHunger;
-var maxThirst;
-var Coins;
+var petType = "dog";
+var maxHealth = 140;
+var maxHunger = 140;
+var maxThirst = 140;
+var Coins = 10;
 var uID;
 var nowTime;
 var responseTime;
 var dead = false;
 
-var playereName;
-var playerePass;
+//var playereName;
+//var playerePass;
 
-var petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger)
+//var petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
 
 var http = new XMLHttpRequest();
-ask();
+//ask();
 
 function sound(src) 
 {
@@ -142,7 +143,6 @@ function updateInfo()
 
 
 // var petType = prompt("which pet you want?", "cat/dog");
-var petType = "dog";
 
 //var petType = "cat.png";
 
@@ -395,7 +395,7 @@ function aCoin(x,y)
   }
   
 
-  
+  var petObject = new pet(petType,(canvas.width/2),(canvas.height)-petY,maxHealth,maxThirst,maxHunger);
   everythingElse = new draw_everthing_else();
   collectables = new collect();
   
